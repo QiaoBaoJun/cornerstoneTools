@@ -21,7 +21,8 @@ export const state = {
   // Settings
   clickProximity: 6,
   touchProximity: 10,
-  handleRadius: 6,
+  // handleRadius: 6,
+  handleRadius: 3,
   deleteIfHandleOutsideImage: true,
   preventHandleOutsideImage: false,
   // Cursor

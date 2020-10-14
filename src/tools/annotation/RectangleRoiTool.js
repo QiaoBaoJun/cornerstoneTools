@@ -72,7 +72,7 @@ export default class RectangleRoiTool extends BaseAnnotationTool {
     return {
       visible: true,
       active: true,
-      color: undefined,
+      color: toolColors.defaultColor,
       invalidated: true,
       handles: {
         start: {
@@ -97,6 +97,7 @@ export default class RectangleRoiTool extends BaseAnnotationTool {
           hasBoundingBox: true,
         },
       },
+      userData: {},
     };
   }
 
@@ -115,7 +116,8 @@ export default class RectangleRoiTool extends BaseAnnotationTool {
       return false;
     }
 
-    const distance = interactionType === 'mouse' ? 15 : 25;
+    // const distance = interactionType === 'mouse' ? 15 : 25;
+    const distance = interactionType === 'mouse' ? 5 : 5;
     const startCanvas = external.cornerstone.pixelToCanvas(
       element,
       data.handles.start
@@ -198,7 +200,7 @@ export default class RectangleRoiTool extends BaseAnnotationTool {
         }
 
         // Configure
-        const color = toolColors.getColorIfActive(data);
+        const color = toolColors.getColorIfSelected(data);
         const handleOptions = {
           color,
           handleRadius,
@@ -237,7 +239,10 @@ export default class RectangleRoiTool extends BaseAnnotationTool {
             this.updateCachedStats(image, element, data);
           }
         }
-
+        data.unit = _getUnit(modality, this.configuration.showHounsfieldUnits);
+        // if (!data.handles.textBox.visible) {
+        //   continue;
+        // }
         // Default to textbox on right side of ROI
         if (!data.handles.textBox.hasMoved) {
           const defaultCoords = getROITextBoxCoords(
@@ -250,7 +255,7 @@ export default class RectangleRoiTool extends BaseAnnotationTool {
 
         const textBoxAnchorPoints = handles =>
           _findTextBoxAnchorPoints(handles.start, handles.end);
-        const textBoxContent = _createTextBoxContent(
+        let textBoxContent = _createTextBoxContent(
           context,
           image.color,
           data.cachedStats,
@@ -258,8 +263,7 @@ export default class RectangleRoiTool extends BaseAnnotationTool {
           hasPixelSpacing,
           this.configuration
         );
-
-        data.unit = _getUnit(modality, this.configuration.showHounsfieldUnits);
+        // textBoxContent = ['car-nest'];
 
         drawLinkedTextBox(
           context,
