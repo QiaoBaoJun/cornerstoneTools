@@ -36,7 +36,6 @@ function getColorIfActive(data) {
 }
 
 function getColorIfSelected(data) {
-  console.log(data);
   return data.selected ? selectedColor : data.color || defaultColor;
 }
 
